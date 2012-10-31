@@ -1,0 +1,20 @@
+{
+  "author": " <>",
+  "name": "node-weatherman",
+  "description": "StormWatch client/metrics generator",
+  "version": "0.0.0",
+  "homepage": "http://github.com/exfm/node-weatherman",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/exfm/node-weatherman.git"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
