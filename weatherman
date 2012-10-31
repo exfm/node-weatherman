@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+"use strict";
+
+var sequence = require('sequence'),
+	when = require('when'),
+	request = require('superagent'),
+	fs = require('fs'),
+	os = require('os'),
+	nconf = require('nconf');
+
+var metrics = {};
+
+nconf.file({'file': 'config.json'});
+
+generateMetrics();
+
+setInterval(function(){
+	generateMetrics();
+}, 60000);
+
+function generateMetrics(){
+	metrics.name = nconf.get('name');
+	metrics.loadAvg = os.loadavg();
+	metrics.freeMem = os.freemem();
+	console.log(metrics);
+	request
+		.post(nconf.get('stormwatch_url'))
+		.send({'metrics': metrics})
+		.end(function(res){
+			console.log(res);
+		});
+}
