@@ -31,7 +31,7 @@ setInterval(function(){
 
 function generateMetrics(){
 	var metrics = [],
-		timestamp = new Date().getTime();
+		timestamp = new Date().toISOString();
 	nconf.get('active_plugins').forEach(function(plugin){
 		plugins[plugin].addMetrics(metrics, timestamp, namespace);
 	});
@@ -45,9 +45,11 @@ function sendMetricsToCloudWatch(metrics){
 	sequence().then(function(next){
 		aws.onConnected(next);
 	}).then(function(next){
-		for (var plugin in metrics) {
-			aws.cloudWatch.putMetricData(namespace, metrics).then(next);
-		}
+		console.log(JSON.stringify(metrics, null, 4));
+		// aws.cloudWatch.putMetricData(namespace, metrics).then(next);
+		// for (var plugin in metrics) {
+			
+		// }
 	}).then(function(next, data){
 		d.resolve(data);
 	});
