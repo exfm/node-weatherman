@@ -15,7 +15,9 @@
     "when": "git://github.com/exfm/when.git",
     "superagent": "0.9.7",
     "sequence": "2.2.1",
-    "nconf": "0.6.4"
+    "nconf": "0.6.4",
+    "plata": "git://github.com/grmnygrmny/node-plata.git",
+    "junto": "git+ssh://git@github.com/exfm/node-junto.git"
   },
   "devDependencies": {},
   "optionalDependencies": {},

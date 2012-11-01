@@ -1,4 +1,4 @@
 {
-    "name": "a_service_name",
-    "stormwatch_url": "http://test.url.com:3000/"
+    "namespace": "TestService",
+    "active_plugins": ["system"]
 }

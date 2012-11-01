@@ -7,27 +7,49 @@ var sequence = require('sequence'),
 	request = require('superagent'),
 	fs = require('fs'),
 	os = require('os'),
-	nconf = require('nconf');
+	nconf = require('nconf'),
+	getConfig = require('junto'),
+	aws = require('plata');
 
-var metrics = {};
+var plugins = {
+		'system': require('./plugins/system')
+	},
+	config;
+
+getConfig('development').then(function(c){
+	config = c;
+	aws.connect(config.aws);
+});
 
 nconf.file({'file': 'config.json'});
+var namespace = nconf.get('namespace');
 
 generateMetrics();
-
 setInterval(function(){
 	generateMetrics();
 }, 60000);
 
 function generateMetrics(){
-	metrics.name = nconf.get('name');
-	metrics.loadAvg = os.loadavg();
-	metrics.freeMem = os.freemem();
-	metrics.timestamp = new Date().getTime();
-	request
-		.post(nconf.get('stormwatch_url'))
-		.send({'metrics': metrics})
-		.end(function(res){
-			console.log(res.statusCode);
-		});
+	var metrics = [],
+		timestamp = new Date().getTime();
+	nconf.get('active_plugins').forEach(function(plugin){
+		plugins[plugin].addMetrics(metrics, timestamp, namespace);
+	});
+	sendMetricsToCloudWatch(metrics).then(function(data){
+		console.log(data);
+	});
+}
+
+function sendMetricsToCloudWatch(metrics){
+	var d = when.defer();
+	sequence().then(function(next){
+		aws.onConnected(next);
+	}).then(function(next){
+		for (var plugin in metrics) {
+			aws.cloudWatch.putMetricData(namespace, metrics).then(next);
+		}
+	}).then(function(next, data){
+		d.resolve(data);
+	});
+	return d.promise;
 }
