@@ -23,11 +23,11 @@ function generateMetrics(){
 	metrics.name = nconf.get('name');
 	metrics.loadAvg = os.loadavg();
 	metrics.freeMem = os.freemem();
-	console.log(metrics);
+	metrics.timestamp = new Date().getTime();
 	request
 		.post(nconf.get('stormwatch_url'))
 		.send({'metrics': metrics})
 		.end(function(res){
-			console.log(res);
+			console.log(res.statusCode);
 		});
 }
