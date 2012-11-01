@@ -47,9 +47,6 @@ function sendMetricsToCloudWatch(metrics){
 	}).then(function(next){
 		console.log(JSON.stringify(metrics, null, 4));
 		// aws.cloudWatch.putMetricData(namespace, metrics).then(next);
-		// for (var plugin in metrics) {
-			
-		// }
 	}).then(function(next, data){
 		d.resolve(data);
 	});
