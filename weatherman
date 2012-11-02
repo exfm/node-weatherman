@@ -34,11 +34,10 @@ function generateMetrics(){
 		timestamp = new Date().toISOString();
 	nconf.get('active_plugins').forEach(function(plugin){
 		plugins[plugin].addMetrics(metrics, timestamp, nconf.get('plugin_opts')).then(function(data){
-			metrics = data;
+			sendMetricsToCloudWatch(data).then(function(resp){
+				console.log(resp);
+			});
 		})
-	});
-	sendMetricsToCloudWatch(metrics).then(function(data){
-		console.log(data);
 	});
 }
 
