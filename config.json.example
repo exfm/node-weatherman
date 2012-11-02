@@ -1,4 +1,10 @@
 {
     "namespace": "TestService",
-    "active_plugins": ["system"]
+    "interval": "60",
+    "active_plugins": ["system"],
+    "plugin_opts": {
+    	"test": "test"
+    	"rabbit_url": "http://someurl.com",
+    	"rabbit_auth": ["username", "password"]
+    }
 }

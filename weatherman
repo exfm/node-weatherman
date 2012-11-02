@@ -4,7 +4,6 @@
 
 var sequence = require('sequence'),
 	when = require('when'),
-	request = require('superagent'),
 	fs = require('fs'),
 	os = require('os'),
 	nconf = require('nconf'),
@@ -12,7 +11,8 @@ var sequence = require('sequence'),
 	aws = require('plata');
 
 var plugins = {
-		'system': require('./plugins/system')
+		'system': require('./plugins/system'),
+		'rabbit': require('./plugins/rabbit')
 	},
 	config;
 
@@ -27,13 +27,15 @@ var namespace = nconf.get('namespace');
 generateMetrics();
 setInterval(function(){
 	generateMetrics();
-}, 300000);
+}, nconf.get('interval')*1000);
 
 function generateMetrics(){
 	var metrics = [],
 		timestamp = new Date().toISOString();
 	nconf.get('active_plugins').forEach(function(plugin){
-		plugins[plugin].addMetrics(metrics, timestamp, namespace);
+		plugins[plugin].addMetrics(metrics, timestamp, nconf.get('plugin_opts')).then(function(data){
+			metrics = data;
+		})
 	});
 	sendMetricsToCloudWatch(metrics).then(function(data){
 		console.log(data);

@@ -1,9 +1,12 @@
 "use strict";
 
-var os = require('os');
+var os = require('os'),
+	when = require('when');
 
-module.exports.addMetrics = function(metrics, timestamp, namespace) {
-	var loadAvg = os.loadavg()[0],
+module.exports.addMetrics = function(metrics, timestamp, pluginOpts) {
+
+	var d = when.defer(),
+		loadAvg = os.loadavg()[0],
 		freeMemPercent = (os.freemem()/os.totalmem())*100,
 		uptime = os.uptime();
 
@@ -14,7 +17,6 @@ module.exports.addMetrics = function(metrics, timestamp, namespace) {
 		'value': loadAvg,
 		'unit': 'Percent',
 		'timestamp': timestamp,
-		'sum': loadAvg,
 		'dimensions': {}
 	},
 	{
@@ -22,11 +24,12 @@ module.exports.addMetrics = function(metrics, timestamp, namespace) {
 		'value': freeMemPercent,
 		'unit': 'Percent',
 		'timestamp': timestamp,
-		'sum': freeMemPercent,
 		'dimensions': {}
 	}];
 
 	system.forEach(function(metric){
 		metrics.push(metric);
 	});
+	d.resolve(metrics);
+	return d.promise;
 }
