@@ -25,9 +25,9 @@ nconf.file({'file': 'config.json'});
 var namespace = nconf.get('namespace');
 
 generateMetrics();
-setInterval(function(){
-	generateMetrics();
-}, 60000);
+// setInterval(function(){
+// 	generateMetrics();
+// }, 60000);
 
 function generateMetrics(){
 	var metrics = [],
@@ -45,8 +45,8 @@ function sendMetricsToCloudWatch(metrics){
 	sequence().then(function(next){
 		aws.onConnected(next);
 	}).then(function(next){
-		console.log(JSON.stringify(metrics, null, 4));
-		// aws.cloudWatch.putMetricData(namespace, metrics).then(next);
+		// console.log(JSON.stringify(metrics, null, 4));
+		aws.cloudWatch.putMetricData(namespace, metrics).then(next);
 	}).then(function(next, data){
 		d.resolve(data);
 	});

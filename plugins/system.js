@@ -10,34 +10,20 @@ module.exports.addMetrics = function(metrics, timestamp, namespace) {
 	// uptime is in seconds
 
 	var system = [{
-		'name': 'loadAvg',
+		'name': 'LoadAvg',
 		'value': loadAvg,
 		'unit': 'Percent',
 		'timestamp': timestamp,
-		'max': loadAvg,
-		'min': loadAvg,
-		'samples': 1,
-		'sum': loadAvg
+		'sum': loadAvg,
+		'dimensions': {}
 	},
 	{
-		'name': 'freeMemPercent',
+		'name': 'FreeMemPercent',
 		'value': freeMemPercent,
 		'unit': 'Percent',
 		'timestamp': timestamp,
-		'max': freeMemPercent,
-		'min': freeMemPercent,
-		'samples': 1,
-		'sum': freeMemPercent
-	},
-	{
-		'name': 'uptime',
-		'value': uptime,
-		'unit': 'Seconds',
-		'timestamp': timestamp,
-		'max': uptime,
-		'min': uptime,
-		'samples': 1,
-		'sum': uptime
+		'sum': freeMemPercent,
+		'dimensions': {}
 	}];
 
 	system.forEach(function(metric){
