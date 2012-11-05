@@ -39,7 +39,7 @@ function generateMetrics(){
 		var p = when.defer();
 		pluginOpts = nconf.get('plugin_opts')[plugin];
 		plugins[plugin].addMetrics(timestamp, pluginOpts).then(function(data){
-			if (pluginOpts !== undefined && pluginOpts.namespace !== defaultNamespace) {
+			if (pluginOpts !== undefined && pluginOpts.namespace !== undefined && pluginOpts.namespace !== defaultNamespace) {
 				allMetrics[pluginOpts.namespace] = data;
 				return p.resolve();
 			}
