@@ -12,7 +12,8 @@ var sequence = require('sequence'),
 
 var plugins = {
 		'system': require('./plugins/system'),
-		'rabbit': require('./plugins/rabbit')
+		'rabbit': require('./plugins/rabbit'),
+		'listening': require('./plugins/listening')
 	},
 	config;
 
@@ -22,7 +23,7 @@ getConfig('development').then(function(c){
 });
 
 nconf.file({'file': 'config.json'});
-var namespace = nconf.get('namespace');
+var defaultNamespace = nconf.get('default_namespace');
 
 generateMetrics();
 setInterval(function(){
@@ -30,14 +31,28 @@ setInterval(function(){
 }, nconf.get('interval')*1000);
 
 function generateMetrics(){
-	var metrics = [],
-		timestamp = new Date().toISOString();
-	nconf.get('active_plugins').forEach(function(plugin){
-		plugins[plugin].addMetrics(metrics, timestamp, nconf.get('plugin_opts')).then(function(data){
-			sendMetricsToCloudWatch(data).then(function(resp){
-				console.log(resp);
-			});
-		})
+	var allMetrics = {},
+		timestamp = new Date().toISOString(),
+		pluginOpts;
+
+	when.all(nconf.get('active_plugins').map(function(plugin){
+		var p = when.defer();
+		pluginOpts = nconf.get('plugin_opts')[plugin];
+		plugins[plugin].addMetrics(timestamp, pluginOpts).then(function(data){
+			if (pluginOpts !== undefined && pluginOpts.namespace !== defaultNamespace) {
+				allMetrics[pluginOpts.namespace] = data;
+				return p.resolve();
+			}
+			else {
+				allMetrics[defaultNamespace] = data;
+				return p.resolve();
+			}
+		});
+		return p.promise;
+	})).then(function(){
+		sendMetricsToCloudWatch(allMetrics).then(function(resp){
+			console.log('done');
+		});
 	});
 }
 
@@ -46,10 +61,18 @@ function sendMetricsToCloudWatch(metrics){
 	sequence().then(function(next){
 		aws.onConnected(next);
 	}).then(function(next){
-		// console.log(JSON.stringify(metrics, null, 4));
-		aws.cloudWatch.putMetricData(namespace, metrics).then(next);
-	}).then(function(next, data){
-		d.resolve(data);
+		when.all(Object.keys(metrics).map(function(namespace){
+			var p = when.defer();
+			aws.cloudWatch.putMetricData(namespace, metrics[namespace]).then(function(){
+				return p.resolve();
+			});
+			p.resolve();
+			return p.promise;
+		})).then(function(){
+			next();
+		});
+	}).then(function(next){
+		d.resolve();
 	});
 	return d.promise;
 }

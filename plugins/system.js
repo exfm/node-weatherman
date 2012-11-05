@@ -3,12 +3,13 @@
 var os = require('os'),
 	when = require('when');
 
-module.exports.addMetrics = function(metrics, timestamp, pluginOpts) {
+module.exports.addMetrics = function(timestamp, pluginOpts) {
 
 	var d = when.defer(),
 		loadAvg = os.loadavg()[0],
 		freeMemPercent = (os.freemem()/os.totalmem())*100,
-		uptime = os.uptime();
+		uptime = os.uptime(),
+		metrics = [];
 
 	// uptime is in seconds
 

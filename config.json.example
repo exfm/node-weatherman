@@ -1,10 +1,16 @@
 {
-    "namespace": "TestService",
+    "default_namespace": "TestNamespace",
     "interval": "60",
     "active_plugins": ["system"],
     "plugin_opts": {
-    	"test": "test"
-    	"rabbit_url": "http://someurl.com",
-    	"rabbit_auth": ["username", "password"]
+    	"rabbit": {
+    		"namespace": "RabbitNamespace",
+    		"rabbit_url": "http://someurl.com",
+    		"rabbit_auth": ["username", "password"]
+    	},
+    	"listening": {
+    		"namespace": "ListeningNamespace",
+    		"listening_url": "http://someurl.com"
+    	}
     }
 }

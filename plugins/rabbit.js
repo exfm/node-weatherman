@@ -3,9 +3,10 @@
 var request = require('superagent'),
 	when = require('when');
 
-module.exports.addMetrics = function(metrics, timestamp, pluginOpts) {
+module.exports.addMetrics = function(timestamp, pluginOpts) {
 
 	var d = when.defer(),
+		metrics = [],
 		messageCount = {};
 
 	request
@@ -14,13 +15,13 @@ module.exports.addMetrics = function(metrics, timestamp, pluginOpts) {
 		.end(function(res){
 			res.body.forEach(function(rabbitQueue){
 				if (rabbitQueue.name === 'celery') {
-					messageCount['celery'] = rabbitQueue.messages;
+					messageCount.celery = rabbitQueue.messages;
 				}
 				else if (rabbitQueue.name === 'metadata') {
-					messageCount['metadata'] = rabbitQueue.messages;
+					messageCount.metadata = rabbitQueue.messages;
 				}
 				else if (rabbitQueue.name === 'phantom') {
-					messageCount['phantom'] = rabbitQueue.messages;
+					messageCount.phantom = rabbitQueue.messages;
 				}
 			});
 
