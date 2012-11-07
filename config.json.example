@@ -11,6 +11,12 @@
     	"listening": {
     		"namespace": "ListeningNamespace",
     		"listening_url": "http://someurl.com"
-    	}
+    	},
+        "nurse": {
+            "nurse_url": "localhost:3000",
+            "nurse_stats": ["memory", "load", "server"],
+            "nurse_mem_stats": ["free", "total"],
+            "nurse_load_stats": ["5m", "15m"]
+        }
     }
 }

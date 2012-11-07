@@ -13,7 +13,8 @@ var sequence = require('sequence'),
 var plugins = {
 		'system': require('./plugins/system'),
 		'rabbit': require('./plugins/rabbit'),
-		'listening': require('./plugins/listening')
+		'listening': require('./plugins/listening'),
+		'nurse': require('./plugins/nurse')
 	},
 	config;
 
