@@ -22,7 +22,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 				if (metric === 'memory') {
 					pluginOpts.nurse_mem_stats.forEach(function(memStat){
 						metrics.push({
-							'name': metric.toCamelCase(true) + memStat.toCamelCase(true),
+							'name': metric.toCamelCase(true),
 							'value': res.body[metric][memStat],
 							'unit': 'Bytes',
 							'timestamp': timestamp,
@@ -35,7 +35,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 				else if (metric === 'load') {
 					pluginOpts.nurse_load_stats.forEach(function(loadStat){
 						metrics.push({
-							'name': metric.toCamelCase(true) + loadStat.toCamelCase(true),
+							'name': metric.toCamelCase(true),
 							'value': res.body[metric][loadStat],
 							'unit': 'Percent',
 							'timestamp': timestamp,
@@ -48,7 +48,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 				else if (metric === 'server') {
 					pluginOpts.nurse_server_stats.forEach(function(serverStat){
 						metrics.push({
-							'name': metric.toCamelCase(true) + serverStat.toCamelCase(true),
+							'name': metric.toCamelCase(true),
 							'value': res.body[metric][serverStat],
 							'timestamp': timestamp,
 							'dimensions': {
