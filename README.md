@@ -8,7 +8,7 @@ CloudWatch metrics client.  Generates metrics and submits them as custom metrics
 
 ## Running
 
-    git clone 
+    git clone
     npm install
     ./weatherman
 
@@ -19,5 +19,8 @@ Configuration is done via nconf.  Copy config.json.example to config.json and ed
 ### Plugins
 
 * system: load, free memory and uptime stats
+* rabbit: Rabbit queue statistics - metadata, phantom and celery
+* listening: current number of listeners on exfm
+* nurse: node-nurse integration, system info and server statistics
 
 
