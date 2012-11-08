@@ -1,6 +1,6 @@
 {
   "author": "",
-  "name": "node-weatherman",
+  "name": "weatherman",
   "description": "StormWatch client/metrics generator",
   "version": "0.0.0",
   "homepage": "http://github.com/exfm/node-weatherman",
