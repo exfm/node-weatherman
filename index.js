@@ -69,12 +69,12 @@ function sendMetricsToCloudWatch(metrics){
 	}).then(function(next){
 		when.all(Object.keys(metrics).map(function(namespace){
 			var p = when.defer();
-			// aws.cloudWatch.putMetricData(namespace, metrics[namespace]).then(function(){
-			//     return p.resolve();
-			// });
-			console.log('ns:' + module.exports.config.namespace);
-			console.log(metrics[namespace]);
-			p.resolve();
+			aws.cloudWatch.putMetricData(namespace, metrics[namespace]).then(function(){
+				return p.resolve();
+			});
+			// console.log('ns:' + module.exports.config.namespace);
+			// console.log(metrics[namespace]);
+			// p.resolve();
 			return p.promise;
 		})).then(function(){
 			next();
