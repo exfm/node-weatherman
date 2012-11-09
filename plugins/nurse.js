@@ -27,6 +27,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 							'unit': 'Bytes',
 							'timestamp': timestamp,
 							'dimensions': {
+								'Hostname': res.body.hostname,
 								'MemStat': memStat
 							}
 						});
@@ -40,6 +41,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 							'unit': 'Percent',
 							'timestamp': timestamp,
 							'dimensions': {
+								'Hostname': res.body.hostname,
 								'TimePeriod': loadStat
 							}
 						});
@@ -52,6 +54,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 							'value': res.body[metric][serverStat],
 							'timestamp': timestamp,
 							'dimensions': {
+								'Hostname': res.body.hostname,
 								'ServerStat': serverStat
 							}
 						});
@@ -62,7 +65,9 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 						'name': metric.toCamelCase(true),
 						'value': res.body[metric],
 						'timestamp': timestamp,
-						'dimensions': {}
+						'dimensions': {
+							'Hostname': res.body.hostname
+						}
 					});
 				}
 			});
