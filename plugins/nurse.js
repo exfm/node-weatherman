@@ -28,7 +28,8 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 							'timestamp': timestamp,
 							'dimensions': {
 								'Hostname': res.body.hostname,
-								'MemStat': memStat
+								'MemStat': memStat.toCamelCase(true),
+								'Process': process.pid
 							}
 						});
 					});
@@ -42,7 +43,8 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 							'timestamp': timestamp,
 							'dimensions': {
 								'Hostname': res.body.hostname,
-								'TimePeriod': loadStat
+								'TimePeriod': loadStat.toCamelCase(true),
+								'Process': process.pid
 							}
 						});
 					});
@@ -55,7 +57,8 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 							'timestamp': timestamp,
 							'dimensions': {
 								'Hostname': res.body.hostname,
-								'ServerStat': serverStat
+								'ServerStat': serverStat.toCamelCase(true),
+								'Process': process.pid
 							}
 						});
 					});
@@ -66,7 +69,8 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 						'value': res.body[metric],
 						'timestamp': timestamp,
 						'dimensions': {
-							'Hostname': res.body.hostname
+							'Hostname': res.body.hostname,
+							'Process': process.pid
 						}
 					});
 				}

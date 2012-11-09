@@ -60,7 +60,6 @@ function generateMetrics(){
 		return p.promise;
 	})).then(function(){
 		sendMetricsToCloudWatch(allMetrics).then(function(resp){
-			console.log('done');
 		});
 	});
 }
