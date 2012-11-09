@@ -19,6 +19,7 @@ fs.readdirSync(__dirname + '/plugins').forEach(function(pluginFilename){
 
 getConfig('development').then(function(c){
 	juntoConfig = c;
+	aws.setLogLevel('err');
 	aws.connect(juntoConfig.aws);
 });
 
