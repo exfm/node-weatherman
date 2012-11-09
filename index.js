@@ -10,7 +10,8 @@ var sequence = require('sequence'),
 
 var availablePlugins = {},
 	juntoConfig,
-	timer;
+	timer,
+	config;
 
 fs.readdirSync(__dirname + '/plugins').forEach(function(pluginFilename){
 	availablePlugins[pluginFilename.split('.')[0]] = require(__dirname + '/plugins/' + pluginFilename);
@@ -21,7 +22,9 @@ getConfig('development').then(function(c){
 	aws.connect(juntoConfig.aws);
 });
 
-module.exports.config = {};
+module.exports.config = function(c){
+	config = c;
+};
 
 module.exports.start = function(ivl){
 	console.log('starting weatherman...');
@@ -41,16 +44,16 @@ function generateMetrics(){
 		timestamp = new Date().toISOString(),
 		pluginOpts;
 
-	when.all(Object.keys(module.exports.config.plugins).map(function(plugin){
+	when.all(Object.keys(config.plugins).map(function(plugin){
 		var p = when.defer();
-		pluginOpts = module.exports.config.plugins[plugin];
+		pluginOpts = config.plugins[plugin];
 		availablePlugins[plugin].addMetrics(timestamp, pluginOpts).then(function(data){
 			if (pluginOpts !== undefined && pluginOpts.namespace !== undefined) {
 				allMetrics[pluginOpts.namespace] = data;
 				return p.resolve();
 			}
 			else {
-				allMetrics[module.exports.config.namespace] = data;
+				allMetrics[config.namespace] = data;
 				return p.resolve();
 			}
 		});
@@ -72,7 +75,7 @@ function sendMetricsToCloudWatch(metrics){
 			aws.cloudWatch.putMetricData(namespace, metrics[namespace]).then(function(){
 				return p.resolve();
 			});
-			// console.log('ns:' + module.exports.config.namespace);
+			// console.log('ns:' + config.namespace);
 			// console.log(metrics[namespace]);
 			// p.resolve();
 			return p.promise;
