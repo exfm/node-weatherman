@@ -12,14 +12,14 @@ Include weatherman, assign a config object to it and pass an interval in seconds
 
 	var wm = require('weatherman');
 
-	wm.config = {
-		namespace = "SW/ServiceName"
+	wm.config({
+		namespace: "SW/ServiceName",
 		plugins: {
 	    	plugin_name: {
 	    		config_key: "config_value"
 	    	}
 		}
-	};
+	});
 
 	wm.start(60);
 
