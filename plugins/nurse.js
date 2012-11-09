@@ -55,6 +55,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 							'name': metric.toCamelCase(true),
 							'value': res.body[metric][serverStat],
 							'timestamp': timestamp,
+							'unit': 'Count',
 							'dimensions': {
 								'Hostname': res.body.hostname,
 								'ServerStat': serverStat.toCamelCase(true),
@@ -68,6 +69,7 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 						'name': metric.toCamelCase(true),
 						'value': res.body[metric],
 						'timestamp': timestamp,
+						'unit': 'Count',
 						'dimensions': {
 							'Hostname': res.body.hostname,
 							'Process': process.pid
