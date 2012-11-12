@@ -29,6 +29,7 @@ module.exports.config = function(c){
 
 module.exports.start = function(ivl){
 	console.log('starting weatherman...');
+	console.log(ivl);
 	generateMetrics();
 	timer = setInterval(function(){
 		generateMetrics();
@@ -61,6 +62,7 @@ function generateMetrics(){
 		return p.promise;
 	})).then(function(){
 		sendMetricsToCloudWatch(allMetrics).then(function(resp){
+			console.log('metrics submitted');
 		});
 	});
 }
@@ -79,9 +81,7 @@ function sendMetricsToCloudWatch(metrics){
 			// console.log(metrics[namespace]);
 			// p.resolve();
 			return p.promise;
-		})).then(function(){
-			next();
-		});
+		})).then(next);
 	}).then(function(next){
 		d.resolve();
 	});

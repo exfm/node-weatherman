@@ -22,14 +22,15 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 				if (metric === 'memory') {
 					pluginOpts.nurse_mem_stats.forEach(function(memStat){
 						metrics.push({
-							'name': metric.toCamelCase(true),
+							'name': metric.toCamelCase(true)+memStat.toCamelCase(true),
 							'value': res.body[metric][memStat],
 							'unit': 'Bytes',
 							'timestamp': timestamp,
 							'dimensions': {
 								'Hostname': res.body.hostname,
-								'MemStat': memStat.toCamelCase(true),
-								'Process': process.pid
+								'Process': process.pid,
+								'Service Name': process.env.SERVICE_NAME,
+								'Node Environment': process.env.NODE_ENV
 							}
 						});
 					});
@@ -37,14 +38,15 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 				else if (metric === 'load') {
 					pluginOpts.nurse_load_stats.forEach(function(loadStat){
 						metrics.push({
-							'name': metric.toCamelCase(true),
+							'name': metric.toCamelCase(true)+'.'+loadStat.toCamelCase(true),
 							'value': res.body[metric][loadStat],
 							'unit': 'Percent',
 							'timestamp': timestamp,
 							'dimensions': {
 								'Hostname': res.body.hostname,
-								'TimePeriod': loadStat.toCamelCase(true),
-								'Process': process.pid
+								'Process': process.pid,
+								'Service Name': process.env.SERVICE_NAME,
+								'Node Environment': process.env.NODE_ENV
 							}
 						});
 					});
@@ -52,14 +54,15 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 				else if (metric === 'server') {
 					pluginOpts.nurse_server_stats.forEach(function(serverStat){
 						metrics.push({
-							'name': metric.toCamelCase(true),
+							'name': metric.toCamelCase(true)+serverStat.toCamelCase(true),
 							'value': res.body[metric][serverStat],
 							'timestamp': timestamp,
 							'unit': 'Count',
 							'dimensions': {
 								'Hostname': res.body.hostname,
-								'ServerStat': serverStat.toCamelCase(true),
-								'Process': process.pid
+								'Process': process.pid,
+								'Service Name': process.env.SERVICE_NAME,
+								'Node Environment': process.env.NODE_ENV
 							}
 						});
 					});
@@ -72,7 +75,9 @@ module.exports.addMetrics = function(timestamp, pluginOpts) {
 						'unit': 'Count',
 						'dimensions': {
 							'Hostname': res.body.hostname,
-							'Process': process.pid
+							'Process': process.pid,
+							'Service Name': process.env.SERVICE_NAME,
+							'Node Environment': process.env.NODE_ENV
 						}
 					});
 				}
